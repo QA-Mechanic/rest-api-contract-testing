@@ -1,0 +1,62 @@
+{
+  "consumer": {
+    "name": "test-app-consumer"
+  },
+  "interactions": [
+    {
+      "description": "a request to get all posts",
+      "providerState": "posts exist",
+      "request": {
+        "method": "GET",
+        "path": "/posts"
+      },
+      "response": {
+        "body": [
+          {
+            "body": "Sample post content here",
+            "id": 1,
+            "title": "Sample Post Title",
+            "userId": 1
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body": {
+            "match": "type",
+            "min": 1
+          },
+          "$.body[*].body": {
+            "match": "type"
+          },
+          "$.body[*].id": {
+            "match": "type"
+          },
+          "$.body[*].title": {
+            "match": "type"
+          },
+          "$.body[*].userId": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "15.0.1"
+    },
+    "pactRust": {
+      "ffi": "0.4.22",
+      "models": "1.2.3"
+    },
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  },
+  "provider": {
+    "name": "jsonplaceholder-provider"
+  }
+}
