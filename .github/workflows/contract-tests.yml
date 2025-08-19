@@ -1,0 +1,66 @@
+name: Contract Tests
+
+# When to run this workflow
+on:
+  push:
+    branches: [main]  # Run when code is pushed to main branch
+  pull_request:
+    branches: [main]  # Run when someone creates a PR to main
+
+# Environment variables (we'll set these up in Step 2)
+env:
+  PACT_BROKER_BASE_URL: ${{ secrets.PACT_BROKER_BASE_URL }}
+  PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
+  CONSUMER_NAME: ${{ secrets.CONSUMER_NAME }}
+  PROVIDER_NAME: ${{ secrets.PROVIDER_NAME }}
+
+jobs:
+  contract-tests:
+    runs-on: ubuntu-latest  # Use Ubuntu virtual machine
+    
+    steps:
+      # Step 1: Get the code
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Node.js
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # Step 3: Install dependencies
+      - name: 🔧 Install dependencies
+        run: npm ci
+
+      # Step 4: Clean old contracts
+      - name: 🧹 Clean old contracts
+        run: npm run clean:pacts
+
+      # Step 5: Run consumer tests
+      - name: 🧪 Run consumer tests
+        env:
+          CONSUMER_VERSION: v${{ github.run_number }}-${{ github.sha }}
+        run: npm run test:consumer
+
+      # Step 6: Publish contracts
+      - name: 📤 Publish contracts to Pactflow
+        env:
+          CONSUMER_VERSION: v${{ github.run_number }}-${{ github.sha }}
+        run: npm run publish:contracts
+
+      # Step 7: Run provider tests
+      - name: ✅ Verify provider contracts
+        env:
+          PROVIDER_VERSION: v${{ github.run_number }}-${{ github.sha }}
+          CONSUMER_VERSION: v${{ github.run_number }}-${{ github.sha }}
+        run: npm run test:provider
+
+      # Step 8: Save contract files (for debugging)
+      - name: 📊 Upload contract files
+        uses: actions/upload-artifact@v4
+        if: always()  # Upload even if tests fail
+        with:
+          name: contract-files-${{ github.run_number }}
+          path: pacts/
