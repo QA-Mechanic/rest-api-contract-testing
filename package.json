@@ -2,12 +2,13 @@
   "name": "restful-api-contract-testing",
   "version": "1.0.0",
   "scripts": {
+
     "test:consumer": "mocha tests/consumer/*.test.js --timeout 10000",
     "test:provider": "mocha tests/provider/*.verification.js --timeout 30000",
     "publish:contracts": "node scripts/publish-contracts-working.js",
     "test:contract:full": "npm run test:consumer && npm run publish:contracts && npm run test:provider",
     "test:contract:consumer-only": "npm run test:consumer && npm run publish:contracts",
-    "clean:pacts": "rm -rf pacts/*.json",
+    "clean:pacts": "node -e \"const fs=require('fs'); const path=require('path'); if(fs.existsSync('pacts')) fs.readdirSync('pacts').forEach(f => fs.unlinkSync(path.join('pacts', f)))\"",
     "clean:logs": "rm -rf logs/*.log"
   },
   "devDependencies": {
