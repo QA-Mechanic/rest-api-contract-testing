@@ -120,7 +120,7 @@ PROVIDER_VERSION="2.0.0" npm run test:provider
 
 **Objective:** Review consumer-provider compatibility status through Pactflow dashboard
 
-**Access Point:** [Pactflow Dashboard](https://thredd-c7014ac2.pactflow.io/pacticipants/jsonplaceholder-provider/versions/2.0.0?branch=main)
+**Access Point:** [Pactflow Dashboard](https://thredd-c7014ac2.pactflow.io/matrix/provider/jsonplaceholder-provider/consumer/test-app-consumer?consumer%5Bbranch%5D=&provider%5Bversion%5D=&provider%5Bbranch%5D=&provider%5Benvironment%5D=&provider%5Btag%5D=)
 
 **Status Indicators:**
 - ✅ **Green:** Consumer and provider are fully compatible
